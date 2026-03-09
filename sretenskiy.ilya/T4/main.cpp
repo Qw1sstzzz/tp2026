@@ -17,7 +17,6 @@ void printShapeInfo(const Shape& shape, int indent = 0) {
         const auto& children = comp.getShapes();
         for (size_t i = 0; i < children.size(); ++i) {
             std::cout << std::endl;
-           
             std::cout << std::string(indent + 2, ' ') << children[i]->getName() << ", ("
                 << std::fixed << std::setprecision(2) << children[i]->getCenter().x << ", "
                 << std::setprecision(2) << children[i]->getCenter().y << "), "
@@ -27,7 +26,7 @@ void printShapeInfo(const Shape& shape, int indent = 0) {
             }
         }
         std::cout << "]";
-	}
+    }
     else {
         std::cout << std::string(indent, ' ') << "[" << shape.getName() << ", ("
             << std::fixed << std::setprecision(2) << shape.getCenter().x << ", "
@@ -35,6 +34,7 @@ void printShapeInfo(const Shape& shape, int indent = 0) {
             << std::setprecision(2) << shape.getArea() << "]";
     }
 }
+
 void printAllShapes(const std::vector<std::unique_ptr<Shape>>& shapes) {
     for (const auto& shape : shapes) {
         printShapeInfo(*shape);
@@ -43,13 +43,10 @@ void printAllShapes(const std::vector<std::unique_ptr<Shape>>& shapes) {
 }
 
 int main() {
-
-    std::vector <std::unique_ptr<Shape>> shapes;
+    std::vector<std::unique_ptr<Shape>> shapes;
 
     shapes.push_back(std::make_unique<Rectangle>(Point(0, 0), Point(2, 3)));
-
     shapes.push_back(std::make_unique<Rectangle>(Point(1, 1), Point(4, 4)));
-
     shapes.push_back(std::make_unique<Circle>(Point(5, 5), 2.0));
 
     auto comp = std::make_unique<CompositeShape>();
@@ -58,14 +55,14 @@ int main() {
 
     shapes.push_back(std::move(comp));
 
-    std::cout << "Before scaling:" << std::endl;
+    std::cout << "Before scaling:\n";
     printAllShapes(shapes);
 
     for (auto& shape : shapes) {
         shape->scale(2.0);
     }
-    std::cout << "\nAfter scaling by 2:" << std::endl;
+    std::cout << "\nAfter scaling by 2:\n";
     printAllShapes(shapes);
 
-	return 0;
+    return 0;
 }

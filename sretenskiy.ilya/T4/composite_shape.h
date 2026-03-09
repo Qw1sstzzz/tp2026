@@ -1,5 +1,5 @@
-#ifndef COMPOSITE_SHAPE
-#define COMPOSITE_SHAPE
+#ifndef COMPOSITE_SHAPE_H
+#define COMPOSITE_SHAPE_H
 
 #include "shape.h"
 #include <vector>
@@ -7,11 +7,12 @@
 
 class CompositeShape : public Shape {
 private:
-	  std::vector<std::unique_ptr<Shape>> shapes;
-public:
-	  void addShape(std::unique_ptr<Shape> shape);
+    std::vector<std::unique_ptr<Shape>> shapes;
 
-	  double getArea() const override;
+public:
+    void addShape(std::unique_ptr<Shape> shape);
+
+    double getArea() const override;
     Point getCenter() const override;
     void move(double dx, double dy) override;
     void scale(double factor) override;
