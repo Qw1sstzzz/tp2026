@@ -1,7 +1,7 @@
 #ifndef SHAPE
 #define SHAPE
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
 #include "point.h"
 
 class Shape

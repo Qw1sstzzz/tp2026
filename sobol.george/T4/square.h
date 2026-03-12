@@ -1,8 +1,8 @@
 #ifndef SQUARE
 #define SQUARE
 #include <iostream>
-#include <cstdlib>
 #include "shape.h"
+#include <cstdlib>
 
 class Square : public Shape
 {

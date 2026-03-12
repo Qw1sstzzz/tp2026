@@ -3,8 +3,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include "ellipse.h"
 #include "square.h"
+#include "ellipse.h"
 #include "rectangle.h"
 #include "shape.h"
 

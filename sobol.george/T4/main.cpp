@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <iomanip>
-#include <vector>
 #include "CompositeShape.h"
+#include <vector>
 
 void printInfo(const std::vector<std::unique_ptr<Shape>>& shapes)
 {

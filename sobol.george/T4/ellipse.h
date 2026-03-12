@@ -1,8 +1,8 @@
 #ifndef ELLIPSE
 #define ELLIPSE
 #include <iostream>
-#include <cstdlib>
 #include "shape.h"
+#include <cstdlib>
 
 class Ellipse : public Shape
 {
