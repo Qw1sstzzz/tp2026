@@ -44,12 +44,6 @@ int main() {
             printShape(*s);
         }
 
-        std::string cmd;
-        if (!(std::cin >> cmd)) {
-            std::cerr << "Error: No input provided\n";
-            return 1;
-        }
-
         std::cout << "\n";
 
         const double scaleFactor = 2.0;
