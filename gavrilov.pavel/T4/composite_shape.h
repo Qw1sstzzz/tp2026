@@ -10,7 +10,7 @@ private:
     std::vector<std::unique_ptr<Shape>> shapes_;
 
 public:
-    CompositeShape() = default;  
+    CompositeShape() = default;
 
     CompositeShape(const CompositeShape&) = delete;
     CompositeShape& operator=(const CompositeShape&) = delete;
