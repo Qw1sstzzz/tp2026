@@ -5,8 +5,8 @@
 
 class Rectangle : public Shape {
 private:
-    Point bottomLeft;
-    Point topRight;
+    Point bottomLeft_;
+    Point topRight_;
 
 public:
     Rectangle(const Point& bottomLeft, const Point& topRight);
@@ -16,9 +16,6 @@ public:
     void move(double dx, double dy) override;
     void scale(double factor) override;
     std::string getName() const override;
-
-    Point getBottomLeft() const { return bottomLeft; }
-    Point getTopRight() const { return topRight; }
 };
 
 #endif
