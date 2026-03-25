@@ -162,28 +162,24 @@ std::istream& operator>>(std::istream& in, DataStruct& dest) {
 
     in >> DelimiterIO{'('};
 
-    const int KEY_COUNT = 3;
-    for (int i = 0; i < KEY_COUNT; ++i) {
+    for (int i = 0; i < 3; ++i) {
         in >> DelimiterIO{':'};
 
-        char firstChar;
-        char secondChar;
-        char thirdChar;
-        char keyNumber;
+        std::string label;
+        in >> label;
 
-        in >> firstChar >> secondChar >> thirdChar >> keyNumber;
-        if (!in || firstChar != 'k' || secondChar != 'e' || thirdChar != 'y') {
+        if (!in) {
             in.setstate(std::ios::failbit);
             return in;
         }
 
-        if (keyNumber == '1' && !hasKey1) {
+        if (label == "key1" && !hasKey1) {
             in >> UllIO{input.key1};
             hasKey1 = true;
-        } else if (keyNumber == '2' && !hasKey2) {
+        } else if (label == "key2" && !hasKey2) {
             in >> CmpIO{input.key2};
             hasKey2 = true;
-        } else if (keyNumber == '3' && !hasKey3) {
+        } else if (label == "key3" && !hasKey3) {
             in >> StrIO{input.key3};
             hasKey3 = true;
         } else {
