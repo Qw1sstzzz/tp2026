@@ -35,7 +35,6 @@ int main()
     }
     double coeff;
     if (!(std::cin >> coeff)) {
-        std::cerr << "error" << std::endl;
         return 1;
     }
     std::cout << std::fixed << std::setprecision(2);
