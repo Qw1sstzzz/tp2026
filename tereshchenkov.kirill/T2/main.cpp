@@ -55,7 +55,7 @@ namespace nspace {
         in >> prefix[0] >> prefix[1];
         if (prefix == "0b" || prefix == "0B") {
             std::string bits;
-            while (std::isdigit(in.peek())) bits += (char)in.get();
+            while (std::isdigit(in.peek())) bits += static_cast<char> (in.get());
             try { dest.ref = std::stoull(bits, nullptr, 2); }
             catch (...) { in.setstate(std::ios::failbit); }
         } else {
