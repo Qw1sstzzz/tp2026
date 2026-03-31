@@ -64,7 +64,7 @@ int main() {
     double factor = 0.0;
     if (!(std::cin >> factor)) {
         if (std::cin.eof()) {
-            std::cerr << "Error: no scale factor provided (end of input)\n";
+            factor = 1.0;
         }
         else {
             std::cerr << "Error: invalid scale factor format\n";
