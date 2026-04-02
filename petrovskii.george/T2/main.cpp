@@ -5,17 +5,19 @@
 #include <algorithm>
 #include <iomanip>
 #include <limits>
-
+#include <sstream>
+#include <cctype>
+#include <cmath>
 
 struct DataStruct {
     double key1;
     long long key2;
     std::string key3;
-} ;
+};
 
 struct DelimiterIO {
     char expected;
-} ;
+};
 
 std::istream& operator>>(std::istream& in, DelimiterIO&& dest) {
     std::istream::sentry sentry(in);
@@ -30,10 +32,9 @@ std::istream& operator>>(std::istream& in, DelimiterIO&& dest) {
     return in;
 }
 
-
 struct KeyIO {
     std::string& ref;
-} ;
+};
 
 std::istream& operator>>(std::istream& in, KeyIO&& dest) {
     std::istream::sentry sentry(in);
@@ -42,16 +43,15 @@ std::istream& operator>>(std::istream& in, KeyIO&& dest) {
     }
     dest.ref.clear();
     char c;
-    if (in.get(c) && std::isalnum(static_cast<unsigned char>(c))) {
+    while (in.get(c) && std::isalnum(static_cast<unsigned char>(c))) {
         dest.ref += c;
     }
     return in;
 }
 
-
 struct StringIO {
     std::string& ref;
-} ;
+};
 
 std::istream& operator>>(std::istream& in, StringIO&& dest) {
     std::istream::sentry sentry(in);
@@ -67,10 +67,9 @@ std::istream& operator>>(std::istream& in, StringIO&& dest) {
     return in;
 }
 
-
 struct DoubleSciIO {
     double& ref;
-} ;
+};
 
 std::istream& operator>>(std::istream& in, DoubleSciIO&& dest) {
     std::istream::sentry sentry(in);
@@ -78,46 +77,24 @@ std::istream& operator>>(std::istream& in, DoubleSciIO&& dest) {
         return in;
     }
     in >> std::ws;
-    std::string num;
+    std::string temp;
     char c;
 
     while (in.get(c) && c != ':') {
-        num += c;
+        temp += c;
     }
     in.putback(':');
 
-    bool valid = false;
+    bool hasExp = temp.find('e') != std::string::npos ||
+                  temp.find('E') != std::string::npos;
 
-    size_t dotPos = num.find('.');
-    if (dotPos != std::string::npos) {
-        bool hasDigitBefore = dotPos > 0 && std::isdigit(static_cast<unsigned char>(num[dotPos - 1]));
-        bool hasDigitAfter = dotPos + 1 < num.length() && std::isdigit(static_cast<unsigned char>(num[dotPos + 1]));
-
-        if (hasDigitBefore && hasDigitAfter) {
-            size_t expPos = num.find_first_of("eE");
-            if (expPos != std::string::npos && expPos > dotPos) {
-                if (expPos + 1 < num.length()) {
-                    char sign = num[expPos + 1];
-                    size_t startExp = expPos + 1;
-                    if (sign == '+' || sign == '-') {
-                        startExp++;
-                    }
-                    if (startExp < num.length() && std::isdigit(static_cast<unsigned char>(num[startExp]))) {
-                        valid = true;
-                    }
-                }
-            }
-        }
-    }
-
-    if (!valid) {
+    if (!hasExp) {
         in.setstate(std::ios::failbit);
         return in;
     }
 
-
     try {
-        dest.ref = std::stod(num);
+        dest.ref = std::stod(temp);
     }
     catch (...) {
         in.setstate(std::ios::failbit);
@@ -126,10 +103,9 @@ std::istream& operator>>(std::istream& in, DoubleSciIO&& dest) {
     return in;
 }
 
-
 struct LongLongIO {
     long long& ref;
-} ;
+};
 
 std::istream& operator>>(std::istream& in, LongLongIO&& dest) {
     std::istream::sentry sentry(in);
@@ -146,26 +122,23 @@ std::istream& operator>>(std::istream& in, LongLongIO&& dest) {
     }
     in.putback(':');
 
-    bool lastIsL = (temp.back() == 'l' || temp.back() == 'L');
-    bool preLastIsL = (temp[temp.size() - 2] == 'l' || temp[temp.size() - 2] == 'L');
-    if (temp.size() >= 2 && lastIsL && preLastIsL) {
-        temp.pop_back();
-        temp.pop_back();
-        try {
-            dest.ref = std::stoll(temp);
-            return in;
-        }
-        catch (...) {
-            in.setstate(std::ios::failbit);
+    if (temp.size() >= 2) {
+        char last = temp.back();
+        char secondLast = temp[temp.size() - 2];
+        if ((last == 'l' || last == 'L') && (secondLast == 'l' || secondLast == 'L')) {
+            temp.pop_back();
+            temp.pop_back();
+            try {
+                dest.ref = std::stoll(temp);
+                return in;
+            }
+            catch (...) {}
         }
     }
-    else {
-        in.setstate(std::ios::failbit);
-    }
+    in.setstate(std::ios::failbit);
 
     return in;
 }
-
 
 std::istream& operator>>(std::istream& in, DataStruct& dest) {
     std::istream::sentry sentry(in);
@@ -175,7 +148,11 @@ std::istream& operator>>(std::istream& in, DataStruct& dest) {
 
     DataStruct temp;
 
-    if (!(in >> DelimiterIO{'('} >> DelimiterIO{':'})) {
+    if (!(in >> DelimiterIO{'('})) {
+        return in;
+    }
+
+    if (!(in >> DelimiterIO{':'})) {
         return in;
     }
 
@@ -205,13 +182,13 @@ std::istream& operator>>(std::istream& in, DataStruct& dest) {
         }
     }
 
+    in >> DelimiterIO{':'};
     if (in >> DelimiterIO{')'}) {
         dest = temp;
     }
 
     return in;
 }
-
 
 class iofmtguard {
 private:
@@ -234,8 +211,7 @@ public:
         s_.precision(precision_);
         s_.flags(fmt_);
     }
-} ;
-
+};
 
 std::ostream& operator<<(std::ostream& out, const DataStruct& source) {
     iofmtguard guard(out);
@@ -248,7 +224,6 @@ std::ostream& operator<<(std::ostream& out, const DataStruct& source) {
     return out;
 }
 
-
 bool compareDataStruct(const DataStruct& a, const DataStruct& b) {
     if (std::abs(a.key1 - b.key1) > 1e-9) {
         return a.key1 < b.key1;
@@ -258,7 +233,6 @@ bool compareDataStruct(const DataStruct& a, const DataStruct& b) {
     }
     return a.key3.length() < b.key3.length();
 }
-
 
 int main(void) {
     std::vector<DataStruct> data;
